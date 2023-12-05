@@ -19,7 +19,7 @@ if(!databaseUrl) {
     process.exit(1);
 }
 
-mongoose.connect(databaseUrl, { dbName: 'teambuilder', })
+mongoose.connect(databaseUrl, { dbName: 'binarybank', })
   .then(() => console.log('MongoDB connected...'))
   .catch(err => console.log(err));
 

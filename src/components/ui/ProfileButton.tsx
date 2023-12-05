@@ -9,11 +9,18 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const ProfileButton = () => {
+
+    const logoutFunction = () => {
+        localStorage.removeItem("token");
+        console.log("logged out"); 
+    }
+
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger>
                 <Avatar>
-                    <AvatarImage src="/img/shadcn.jpg" />
+                    <AvatarImage src="shadcn.jpg" />
                     <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
             </DropdownMenuTrigger>
@@ -29,7 +36,7 @@ const ProfileButton = () => {
                 <DropdownMenuItem className="cursor-pointer">Subscription
                 </DropdownMenuItem>
                 <DropdownMenuSeparator/>
-                <DropdownMenuItem className="cursor-pointer">Log Out
+                <DropdownMenuItem className="cursor-pointer" onClick={logoutFunction}>Log Out
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>

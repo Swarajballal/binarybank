@@ -2,40 +2,41 @@
 import { Link } from 'react-router-dom';
 import Container from '@/components/ui/container';
 import { Button } from '@/components/ui/button';
-import { UserPlus, Sun, Moon, Menu } from 'lucide-react';
+import {  CreditCard, Sun, Moon, Menu } from 'lucide-react';
 import ProfileButton from '@/components/ui/ProfileButton';
 import { useTheme } from "@/components/ThemeProvider"
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
 
 const routes = [
-
     {
         href: '/',
-        label: 'Home'
+        label: 'HOME'
     },
     {
-        href: '/users',
-        label: 'USERS'
+        href: '/signin',
+        label: 'CUSTOMER LOGIN'
     },
     {
-        href: '/adduser',
-        label: 'ADD USER'
+        href: '/bankerlogin',
+        label: 'BANKER LOGIN'
     },
     {
-        href: '/teams',
-        label: 'TEAMS'
+        href: '/transactions',
+        label: 'TRANSACTIONS'
     },
     {
-        href: '/createteams',
-        label: 'CREATE TEAM'
-    },
-  
+        href: '/accounts',
+        label: 'ACCOUNTS'
+    }
 ];
+
 
 const Header = () => {
 
     const { theme, setTheme } = useTheme();
+    const token = localStorage.getItem('token');
+    
 
   return (
     <header className='sm:flex sm:justify-between py-3 px-4 border-b'>
@@ -62,9 +63,7 @@ const Header = () => {
                         </SheetContent>
                     </Sheet>
                     <Link to='/' className='ml-4 lg:ml-0'>
-                        <h1 className='text-base md:text-xl font-bold'>
-                            TEAMBUILDER 
-                        </h1>
+                        <img src="logo.png" alt="" className='w-16 h-16' />
                     </Link>
                 </div>
                 <nav className='mx-6 flex items-center space-x-4 lg:space-x-6 hidden md:block'>
@@ -86,7 +85,7 @@ const Header = () => {
                         className='mr-2'
                         aria-label='Add User'
                      >
-                        <UserPlus className='h-6 w-6' />
+                        <CreditCard className='h-6 w-6' />
                         <span className='sr-only'>
                             Add User
                         </span>
@@ -106,7 +105,25 @@ const Header = () => {
                             Toggle Theme
                         </span>
                     </Button>
-                    <ProfileButton/>    
+
+                    { token ? (
+                        <ProfileButton />
+                ) : (
+                   <div className='flex'>
+                    <Link to='/signup'>
+                     <Button variant='default' size='sm' className='ml-6'>
+                        Sign Up
+                    </Button>
+                    </Link>
+
+                    <Link to='/signin'>
+                     <Button variant='default' size='sm' className='ml-6'>
+                        Sign In
+                    </Button>
+                    </Link>
+                   </div>
+                )}
+                    
                 </div>
             </div>
         </Container>

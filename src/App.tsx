@@ -1,20 +1,21 @@
-import { ThemeProvider } from "@/components/ThemeProvider"
+
 import "./App.css";
-import { BrowserRouter as Router, Routes } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Header from "@/components/Header";
-import Footer from "./components/Footer";
+import Footer from "@/components/Footer";
+import AuthenticationPage from "@/components/authentication/userauthentication";
+import SignUpForm from "@/components/authentication/Signup";
 
 function App() {
   return (
-    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme"> 
-    <Router>
+    <>
       <Header/>
       <Routes>
-
+        <Route path="/signin" element={<AuthenticationPage/>}/>
+        <Route path="/signup" element={<SignUpForm/>}/>
       </Routes>
       <Footer/>
-    </Router>
-    </ThemeProvider>
+    </>
   );
 }
 

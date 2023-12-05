@@ -10,11 +10,11 @@ export default function Footer() {
           <div className="mb-6 md:mb-0">
             <a href="" className="flex items-center">
               <img
-                src="img/shadcn.jpg"
-                className="h-8 me-3"
-                alt="FlowBite Logo"
+                src="logo.png"
+                className="h-12 w-12 me-3"
+                alt="Binary Bank"
               />
-              <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">TeamBuilder Pro</span>
+              <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Binary Bank</span>
             </a>
           </div>
           <div className="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3">
@@ -22,7 +22,7 @@ export default function Footer() {
               <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Resources</h2>
               <ul className="text-gray-500 dark:text-gray-400 font-medium">
                 <li className="mb-4">
-                  <a href="" className="hover:underline">TeamBuilder</a>
+                  <a href="" className="hover:underline">Services</a>
                 </li>
                 <li>
                   <a href="" className="hover:underline">Tailwind CSS</a>
