@@ -163,7 +163,16 @@ router.post('/transactions', authenticateUser, async(req: RequestWithUser, res: 
         return res.status(400).json({ message: 'Account does not exist' });
     }
 
-    return res.status(200).json({ transactions: account.transactions });
+    const transactions = account.transactions.map((transaction, index) => ({
+        id: index.toString(),
+        amount: transaction.amount,
+        staus: 'success',
+        email: user.email,
+        type: transaction.type,
+        date: transaction.date,
+    }));
+
+    return res.status(200).json({ transactions });
 })
 
 

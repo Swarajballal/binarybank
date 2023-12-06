@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import AuthenticationPage from "@/components/authentication/userauthentication";
 import SignUpForm from "@/components/authentication/Signup";
 import Home from "@/components/Home";
+import TaskPage from "@/components/Transactions";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/signin" element={<AuthenticationPage/>}/>
         <Route path="/signup" element={<SignUpForm/>}/>
         <Route path="/" element={<Home/>}/>
+        <Route path='/transactions' element={<TaskPage/>}/>
       </Routes>
       <Footer/>
     </>
