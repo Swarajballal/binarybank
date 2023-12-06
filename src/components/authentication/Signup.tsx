@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import { useState } from "react";
 import { Button } from "@/components/ui/button"
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
@@ -13,15 +13,18 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Icons } from "@/components/icons"
+import { useSetRecoilState } from "recoil"
+import { userStateAtom } from "@/store/atoms/userStateAtom"
 
 export default function SignUpForm() {
     const navigate = useNavigate();
-    const [isEmailPasswordLoading, setIsEmailPasswordLoading] = React.useState<boolean>(false);
-    const [signupFormData, setSignupFormData] = React.useState({
+    const [isEmailPasswordLoading, setIsEmailPasswordLoading] = useState<boolean>(false);
+    const [signupFormData, setSignupFormData] = useState({
         username: "",
         email: "",
         password: "",
     });
+    const setUser = useSetRecoilState(userStateAtom);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         // console.log("Input changed:", e.target.value);
@@ -32,16 +35,11 @@ export default function SignUpForm() {
     };
 
 
-    useEffect(() => {
-      
-    })
-
-
     async function onSubmitSignup(event: React.SyntheticEvent) {
         event.preventDefault();
         try {
             setIsEmailPasswordLoading(true);
-            console.log('Sending request...');
+            // console.log('Sending request...');
             const response = await axios.post(
                 `${import.meta.env.VITE_APP_API_BASE_URL}/api/user/signup`,
                 {
@@ -56,15 +54,20 @@ export default function SignUpForm() {
                 }
             );
 
-            console.log('Response received:', response.data);
+            // console.log('Response received:', response.data);
             const token = response.data.token;
             localStorage.setItem('token', token);
+            setUser({
+                isLoading: false,
+                userEmail: signupFormData.email,
+                userType: 'customer',
+            })
             navigate('/');
           } catch (error) {
             console.error('Error:', error);
           } finally {
             setIsEmailPasswordLoading(false);
-            console.log('Request completed.');
+            // console.log('Request completed.');
           }
     }
 

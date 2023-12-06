@@ -4,7 +4,7 @@ export const userStateAtom = atom({
   key: 'userStateAtom',
   default: {
     isLoading: true,
-    userEmail: null,
-    userType: null
+    userEmail: null as string | null,
+    userType: null as string | null,
   },
 });

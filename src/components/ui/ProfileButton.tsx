@@ -7,11 +7,20 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useSetRecoilState } from "recoil";
+import { userStateAtom } from "@/store/atoms/userStateAtom";
 
 const ProfileButton = () => {
 
+    const setUser = useSetRecoilState(userStateAtom);
+
     const logoutFunction = () => {
         localStorage.removeItem("token");
+        setUser({
+            isLoading: false,
+            userEmail: null,
+            userType: null,
+        });
         console.log("logged out"); 
     }
 

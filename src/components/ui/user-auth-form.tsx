@@ -7,6 +7,8 @@ import { Label } from "@/components/ui/label";
 import { Eye, EyeOff } from "lucide-react";
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
+import { useSetRecoilState } from "recoil";
+import { userStateAtom } from "@/store/atoms/userStateAtom";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -18,9 +20,10 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     email: "",
     password: "",
   });
+  const setUser = useSetRecoilState(userStateAtom);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("Input changed:", e.target.value);
+    // console.log("Input changed:", e.target.value);
     setLoginFormData({
       ...loginFormData,
       [e.target.name]: e.target.value
@@ -36,7 +39,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   
     try {
       setIsEmailPasswordLoading(true);
-      console.log('Sending request...');
+      // console.log('Sending request...');
       const response = await axios.post(
         `${import.meta.env.VITE_APP_API_BASE_URL}/api/user/login`,
         {
@@ -49,15 +52,21 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
           }
         }
       );
-      console.log('Response received:', response.data);
+      // console.log('Response received:', response.data);
       const token = response.data.token;
       localStorage.setItem('token', token);
+      setUser({
+        isLoading: false,
+        userEmail: loginFormData.email,
+        userType: 'customer',
+      })
       navigate('/');
     } catch (error) {
-      console.error('Error:', error);
+      // console.error('Error:', error);
+      console.log('no token found');
     } finally {
       setIsEmailPasswordLoading(false);
-      console.log('Request completed.');
+      // console.log('Request completed.');
     }
   }
   

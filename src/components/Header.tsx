@@ -6,7 +6,8 @@ import {  CreditCard, Sun, Moon, Menu } from 'lucide-react';
 import ProfileButton from '@/components/ui/ProfileButton';
 import { useTheme } from "@/components/ThemeProvider"
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-
+import { useRecoilValue } from 'recoil';
+import { userEmailState } from '@/store/selectors/userEmailSelector';
 
 const routes = [
     {
@@ -35,8 +36,7 @@ const routes = [
 const Header = () => {
 
     const { theme, setTheme } = useTheme();
-    const token = localStorage.getItem('token');
-    
+    const userEmail = useRecoilValue(userEmailState);
 
   return (
     <header className='sm:flex sm:justify-between py-3 px-4 border-b'>
@@ -106,7 +106,7 @@ const Header = () => {
                         </span>
                     </Button>
 
-                    { token ? (
+                    { userEmail ? (
                         <ProfileButton />
                 ) : (
                    <div className='flex'>
