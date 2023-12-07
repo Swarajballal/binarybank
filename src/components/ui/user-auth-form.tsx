@@ -60,7 +60,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         userEmail: loginFormData.email,
         userType: 'customer',
       })
-      navigate('/');
+      navigate('/transactions');
     } catch (error) {
       // console.error('Error:', error);
       console.log('no token found');

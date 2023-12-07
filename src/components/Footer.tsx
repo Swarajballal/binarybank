@@ -3,7 +3,7 @@ import Container from "./ui/container";
 
 export default function Footer() {
   return (
-    <footer className="bg-secondary-foreground/10 dark:bg-gray-900">
+    <footer className="bg-secondary-foreground/10 dark:bg-gray-900 w-full relative bottom-0 right-0">
       <Container>
       <div className="mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8">
         <div className="md:flex md:justify-between">

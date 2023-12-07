@@ -39,7 +39,7 @@ const Header = () => {
     const userEmail = useRecoilValue(userEmailState);
 
   return (
-    <header className='sm:flex sm:justify-between py-3 px-4 border-b'>
+    <header className='sm:flex sm:justify-between py-3 border-b'>
         <Container>
             <div className='relative px-4 sm:px-6 lg:px-8 flex h-16 items-center justify-between w-full'>
                 <div className='flex items-center'>
@@ -111,13 +111,13 @@ const Header = () => {
                 ) : (
                    <div className='flex'>
                     <Link to='/signup'>
-                     <Button variant='default' size='sm' className='ml-6'>
+                     <Button variant='default' size='sm' className='ml-2'>
                         Sign Up
                     </Button>
                     </Link>
 
                     <Link to='/signin'>
-                     <Button variant='default' size='sm' className='ml-6'>
+                     <Button variant='default' size='sm' className='ml-2'>
                         Sign In
                     </Button>
                     </Link>

@@ -8,6 +8,7 @@ export type Payment = {
   email: string
   type: "deposit" | "withdrawal" 
   date: Date  
+  balance: number
 }
 
 
@@ -22,15 +23,26 @@ export const columns: ColumnDef<Payment>[] = [
   },
   {
     accessorKey: "type",  
-    header: "Transaction Type",
+    header: "Type",
   },
   {
     accessorKey: "status",
     header: "Status",
+    cell: ({ row }) => {
+      if (row.original.status === "success") {
+        return <button className="bg-green-400 dark:bg-green-500 dark:text-black text-white  rounded px-2 py-1">Success</button>;
+      } else {
+        return row.original.status;
+      }
+    },
   },
   {
     accessorKey: "date",  
-    header: "Transaction Date",
+    header: "Date",
+  },
+  {
+    accessorKey: "balance",  
+    header: "Balance",
   },
 ]
 

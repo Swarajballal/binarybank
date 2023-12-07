@@ -4,6 +4,7 @@ import { Request, Response } from 'express';
 import { authenticateUser, SECRET } from '../middlewares/userAuth';
 import jwt, { Secret } from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
+import { v4 as uuidv4 } from 'uuid';
 
 const router = express.Router();
 
@@ -43,13 +44,22 @@ router.post('/signup', async(req: Request, res: Response) => {
         });
         await newUser.save();
 
+        // Create an account for the new user
+        const newAccount = new Account({
+            user: newUser._id,
+            balance: 0,
+            transactions: [],
+        });
+        await newAccount.save();
+
         const token = jwt.sign({ email, userType: newUser.userType }, SECRET as Secret, { expiresIn: '1h' });
-        return res.status(200).json({ message: 'User created', token });
+        return res.status(200).json({ message: 'User and account created', token });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: 'Server error' });
     }
 });
+
 
 // Login a user
 router.post('/login', async(req: Request, res: Response) => {
@@ -101,7 +111,6 @@ router.get('/me', authenticateUser, async(req: RequestWithUser, res: Response) =
 
 
 // user deposit 
-
 router.post('/deposit', authenticateUser, async(req: RequestWithUser, res: Response) => {
     const { amount } = req.body;
     const user = await User.findOne({ email: req.user?.email });
@@ -112,18 +121,23 @@ router.post('/deposit', authenticateUser, async(req: RequestWithUser, res: Respo
     if (!account) {
         return res.status(400).json({ message: 'Account does not exist' });
     }
-    account.balance += amount;
+
+    const newBalance = account.balance + amount;
+
     account.transactions.push({
         type: 'deposit',
+        status: 'success',
         amount,
+        balance: newBalance,
     });
+
+    account.balance = newBalance;
     await account.save();
+
     return res.status(200).json({ message: 'Deposit successful', balance: account.balance });
 });
 
-
 // user withdraw
-
 router.post('/withdraw', authenticateUser, async(req: RequestWithUser, res: Response) => {
     const { amount } = req.body;
     const user = await User.findOne({ email: req.user?.email });
@@ -134,22 +148,31 @@ router.post('/withdraw', authenticateUser, async(req: RequestWithUser, res: Resp
     if (!account) {
         return res.status(400).json({ message: 'Account does not exist' });
     }
+
     if (account.balance < amount) {
         return res.status(400).json({ message: 'Insufficient Funds' });
     }
-    account.balance -= amount;
+
+    const newBalance = account.balance - amount;
+
     account.transactions.push({
         type: 'withdrawal',
-        amount
+        status: 'success',
+        amount,
+        balance: newBalance,
     });
+
+    account.balance = newBalance;
     await account.save();
+
     return res.status(200).json({ message: 'Withdrawal successful', balance: account.balance });
 });
 
 
+
 // user transactions
 
-router.post('/transactions', authenticateUser, async(req: RequestWithUser, res: Response) => {
+router.get('/transactions', authenticateUser, async(req: RequestWithUser, res: Response) => {
 
     const user = await User.findOne({ email: req.user?.email});
 
@@ -163,14 +186,17 @@ router.post('/transactions', authenticateUser, async(req: RequestWithUser, res: 
         return res.status(400).json({ message: 'Account does not exist' });
     }
 
-    const transactions = account.transactions.map((transaction, index) => ({
-        id: index.toString(),
+    const transactions = account.transactions.map((transaction) => ({
+        id: uuidv4(),
         amount: transaction.amount,
-        staus: 'success',
+        status: 'success',
         email: user.email,
         type: transaction.type,
         date: transaction.date,
+        balance: transaction.balance
     }));
+
+    // console.log(`from transaction database:`,transactions);
 
     return res.status(200).json({ transactions });
 })

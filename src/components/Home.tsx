@@ -51,11 +51,19 @@ const Home = () => {
       <div className="space-y-10">
         <div className="p-4 sm:p-6 lg:p-8 rounded-lg overflow-hidden">
         <div className={`rounded-lg relative aspect-square md:aspect-[2.4/1] overflow-hidden bg-cover bg-center`}
-          style={{ backgroundImage: "url('/hero-banner.jpg')" }}
+        style={{ backgroundImage: "url('/hero-banner.jpg')" }}
           onLoad={() => setImgLoaded(true)}
       >
+              <video
+                autoPlay
+                loop
+                muted
+                className="absolute top-0 left-0 w-full h-full object-cover hidden md:block"
+              >
+                <source src="signup_bg.mp4" type="video/mp4" />
+              </video>
             {!imgLoaded && <Skeleton />}
-            <div className="h-full w-full flex flex-col justify-center items-center text-center gap-y-8">
+            <div className="h-full w-full flex flex-col justify-center items-center text-center gap-y-8 relative">
               <div className="font-bold text-3xl sm:text-5xl lg:text-6xl sm:max-w-xl max-w-xs text-black dark:text-white bg-secondary/60 p-4 rounded-lg">
                 <p className="text-4xl text-foreground">Welcome to Binary Bank</p>
                 <p className="text-xl fill-muted text-muted-foreground">Sab ka Vikas</p>

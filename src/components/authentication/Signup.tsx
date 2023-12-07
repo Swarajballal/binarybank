@@ -62,7 +62,7 @@ export default function SignUpForm() {
                 userEmail: signupFormData.email,
                 userType: 'customer',
             })
-            navigate('/');
+            navigate('/transactions');
           } catch (error) {
             console.error('Error:', error);
           } finally {

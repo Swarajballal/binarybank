@@ -11,6 +11,8 @@ interface ITransaction {
   type: string;
   amount: number;
   date?: Date;
+  status?: "pending" | "processing" | "success" | "failed";
+  balance?: number;
 }
 
 interface IAccount {
@@ -67,6 +69,9 @@ const UserSchema = new mongoose.Schema<IUserDoc>({
       date: {
         type: Date,
         default: Date.now
+      },
+      balance: {
+        type: Number
       }
     }]
   });
