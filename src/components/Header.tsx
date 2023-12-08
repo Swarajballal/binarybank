@@ -62,9 +62,9 @@ const Header = () => {
                             </nav>
                         </SheetContent>
                     </Sheet>
-                    <Link to='/' className='ml-4 lg:ml-0'>
+                    { userEmail ? (<Link to='/' className='ml-4 lg:ml-0'>
                         <img src="logo.png" alt="" className='w-16 h-16' />
-                    </Link>
+                    </Link>) : null}
                 </div>
                 <nav className='mx-6 flex items-center space-x-4 lg:space-x-6 hidden md:block'>
                     {routes.map((route,index) => (
