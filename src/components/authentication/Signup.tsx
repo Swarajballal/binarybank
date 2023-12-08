@@ -13,6 +13,8 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Icons } from "@/components/icons"
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useSetRecoilState } from "recoil"
 import { userStateAtom } from "@/store/atoms/userStateAtom"
 
@@ -62,13 +64,23 @@ export default function SignUpForm() {
                 userEmail: signupFormData.email,
                 userType: 'customer',
             })
-            navigate('/transactions');
-          } catch (error) {
-            console.error('Error:', error);
-          } finally {
+            navigate('/');
+          } catch (error: unknown) {
+            if (axios.isAxiosError(error)) {
+                toast.error(error.response?.data.message || "Something went wrong", {
+                    theme: "colored",
+                    position: toast.POSITION.TOP_CENTER,
+                });
+            } else {
+                toast.error("Something went wrong", {
+                    theme: "colored",
+                    position: toast.POSITION.TOP_CENTER,
+                });
+            }
+        } finally {
             setIsEmailPasswordLoading(false);
             // console.log('Request completed.');
-          }
+        }
     }
 
 
@@ -189,6 +201,7 @@ export default function SignUpForm() {
           </p>
         </Card>
       </div>
+      <ToastContainer />
     </div>
   )
 }

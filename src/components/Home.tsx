@@ -23,13 +23,13 @@ const Home = () => {
     if (!isLoading) {
       // console.log(userEmail);
       if (userEmail !== null) {
-        toast.dismiss(); // Dismiss any existing toasts
+        toast.dismiss();
         toast.success(`Welcome ${userEmail}`,{
           theme: "colored",
           position: toast.POSITION.TOP_CENTER
         });
       } else {
-        toast.dismiss(); // Dismiss any existing toasts
+        toast.dismiss(); 
         toast.error('You are not logged in',
         { 
           theme: "colored",

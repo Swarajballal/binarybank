@@ -11,6 +11,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import axios from "axios";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useCallback, useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useBalance } from "@/store/selectors/userBalanceSelector";
@@ -21,31 +23,59 @@ interface DepositProps {
 }
 
 export const Depositfunc: React.FC<DepositProps> = ({ refreshTransactions }) => {
-  const [amount, setAmount] = useState<number>(0);
+  const [amount, setAmount] = useState<string>('');
   const balanceValue = useRecoilValue(useBalance);
   const token = localStorage.getItem('token');
   const setBalance = useSetRecoilState(balanceState);
+
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseFloat(e.target.value);
-    if (!isNaN(value) && value > 0) {
-      setAmount(value);
-    }
+    const value = e.target.value;
+      if (/^\d*\.?\d*$/.test(value)) {
+          setAmount(value);
+      } else {
+          setAmount('');
+      }
   }, []);
 
-  const handleDeposit = async() => {
-    const response = await axios.post(`${import.meta.env.VITE_APP_API_BASE_URL}/api/user/deposit`, {
-      amount: amount
-    },{
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      }
-    });
 
-    const balance = response.data.balance;
-    setBalance(balance);
-    refreshTransactions();
-  }
+  const handleDeposit = async() => {
+    try {
+        const response = await axios.post(`${import.meta.env.VITE_APP_API_BASE_URL}/api/user/deposit`, {
+            amount: amount
+        },{
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            }
+        });
+
+        const balance = response.data.balance;
+        setBalance(balance);
+        refreshTransactions();
+
+        toast.success(`Deposit successful. Added ${amount}. Current balance: ${balance}`, {
+            theme: "colored",
+            position: toast.POSITION.TOP_CENTER,
+        });
+
+        setAmount('0');
+        
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error)) {
+            toast.error(error.response?.data.message || "Something went wrong", {
+                theme: "colored",
+                position: toast.POSITION.TOP_CENTER,
+            });
+        } else {
+            toast.error("Something went wrong", {
+                theme: "colored",
+                position: toast.POSITION.TOP_CENTER,
+            });
+        }
+    }
+}
+
+
 
   return (
     <Dialog>
@@ -77,6 +107,7 @@ export const Depositfunc: React.FC<DepositProps> = ({ refreshTransactions }) => 
         <Button type="submit" onClick={handleDeposit}>Add Money</Button>
         </DialogFooter>
       </DialogContent>
+      <ToastContainer />
     </Dialog>
   )
 }

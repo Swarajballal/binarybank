@@ -6,26 +6,44 @@ import { Depositfunc } from '@/components/transactions/deposit';
 import { Withdrawfunc } from '@/components/transactions/withdraw';
 import { useRecoilState } from 'recoil';
 import { transactionsState } from '@/store/atoms/userPayments';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Page() {
   const [transactions, setTransactions] = useRecoilState(transactionsState);
   const [refreshKey, setRefreshKey] = useState(0);
   const token = localStorage.getItem('token');
+
   
   useEffect(() => {
     const getTransactions = async () => {
-      const response = await axios.get(`${import.meta.env.VITE_APP_API_BASE_URL}/api/user/transactions`, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+        try {
+            const response = await axios.get(`${import.meta.env.VITE_APP_API_BASE_URL}/api/user/transactions`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                }
+            });
+            const transactions = response.data.transactions;
+            setTransactions(transactions);
+        } catch (error: unknown) {
+            if (axios.isAxiosError(error)) {
+                toast.error(error.response?.data.message || "Something went wrong", {
+                    theme: "colored",
+                    position: toast.POSITION.TOP_CENTER,
+                });
+            } else {
+                toast.error("Something went wrong", {
+                    theme: "colored",
+                    position: toast.POSITION.TOP_CENTER,
+                });
+            }
         }
-      });
-      const transactions = response.data.transactions;
-      setTransactions(transactions);
     }
 
     getTransactions();
-  }, [refreshKey]);
+}, [refreshKey]);
+
 
 
   const refreshTransactions = () => {
@@ -41,8 +59,8 @@ export default function Page() {
           </div>}
 
           {token ? (<DataTable columns={columns} data={transactions} />) : (<div className="text-center">Please login to view your transactions</div>)}
-            
         </div>
+        <ToastContainer />
     </section>
   );
 }

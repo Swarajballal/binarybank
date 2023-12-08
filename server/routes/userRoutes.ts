@@ -25,11 +25,11 @@ router.post('/signup', async(req: Request, res: Response) => {
         const user = await User.findOne({ email });
 
         if (user) {
-            return res.status(400).json({ message: 'User already exists' });
+            return res.status(400).json({ message: 'A user with this email already exists.' });
         }
 
         if(!password || email === '' || username === '') {
-            return res.status(400).json({ message: 'password, email and username are required' }); 
+            return res.status(400).json({ message: 'Username, email, and password are required.' }); 
         }
 
         const saltRounds = 10;
@@ -55,7 +55,7 @@ router.post('/signup', async(req: Request, res: Response) => {
         const token = jwt.sign({ email, userType: newUser.userType }, SECRET as Secret, { expiresIn: '1h' });
         return res.status(200).json({ message: 'User and account created', token });
     } catch (error) {
-        console.error(error);
+        // console.error(error);
         return res.status(500).json({ message: 'Server error' });
     }
 });
@@ -68,7 +68,7 @@ router.post('/login', async(req: Request, res: Response) => {
         const user = await User.findOne({ email });
 
         if (!user) {
-            return res.status(400).json({ message: 'User does not exist' });
+            return res.status(400).json({ message: 'User does not exist Please Signup' });
         }
 
         if(!password || email === '') {
@@ -113,6 +113,11 @@ router.get('/me', authenticateUser, async(req: RequestWithUser, res: Response) =
 // user deposit 
 router.post('/deposit', authenticateUser, async(req: RequestWithUser, res: Response) => {
     const { amount } = req.body;
+
+    if (amount <= 0) {
+        return res.status(400).json({ message: 'Amount must be greater than 0' });
+    }
+
     const user = await User.findOne({ email: req.user?.email });
     if (!user || user.userType !== 'customer') {
         return res.status(400).json({ message: 'User does not exist or is not a customer' });
@@ -134,12 +139,17 @@ router.post('/deposit', authenticateUser, async(req: RequestWithUser, res: Respo
     account.balance = newBalance;
     await account.save();
 
-    return res.status(200).json({ message: 'Deposit successful', balance: account.balance });
+    return res.status(200).json({ message: `Deposit successful added ${amount} current balance : ${newBalance}`, balance: account.balance });
 });
 
 // user withdraw
 router.post('/withdraw', authenticateUser, async(req: RequestWithUser, res: Response) => {
     const { amount } = req.body;
+
+    if (amount <= 0) {
+        return res.status(400).json({ message: 'Amount must be greater than 0' });
+    }
+
     const user = await User.findOne({ email: req.user?.email });
     if (!user || user.userType !== 'customer') {
         return res.status(400).json({ message: 'User does not exist or is not a customer' });

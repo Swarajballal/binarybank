@@ -24,7 +24,7 @@ interface RequestWithUser extends Request {
             if (err) {
                 // console.log('JWT verification failed:', err);
                 return res.status(403).json({
-                    message: 'Invalid token',
+                    message: 'You are not logged in',
                 });
             }
             req.user = user as UserPayload;
